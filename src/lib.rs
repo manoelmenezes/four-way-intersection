@@ -12,6 +12,12 @@ pub struct Controller {
     pedestrian_yellow_time: u64,
 }
 
+#[derive(Debug)]
+enum Direction {
+    Horizontal,
+    Vertical,
+}
+
 impl Controller {
     pub fn new() -> Self {
         Self {
@@ -33,81 +39,64 @@ impl Controller {
         }
     }
 
+    fn control(
+        &mut self,
+        direction: Direction 
+    ) {
+        let (pedestrian_traffic_lights, car_traffic_lights) = match direction {
+            Direction::Horizontal => (
+                                         &mut self.horizontal_pedestrian_traffic_lights,
+                                         &mut self.horizontal_car_traffic_lights
+                                     ),
+            Direction::Vertical => (
+                                       &mut self.vertical_pedestrian_traffic_lights,
+                                       &mut self.vertical_car_traffic_lights
+                                   ),
+        };
+
+        Controller::change_state(&mut *pedestrian_traffic_lights, State::Green);
+        println!("{:#?} pedestrian lights transitioned to green state.", direction);
+        thread::sleep(time::Duration::from_secs(self.car_red_to_green_transition_time));
+
+        Controller::change_state(&mut *car_traffic_lights, State::Green);
+        println!("{:#?} car traffic lights transitioned to green state.", direction);
+
+        let pgt = self.pedestrian_green_time - self.car_red_to_green_transition_time;
+        thread::sleep(time::Duration::from_secs(pgt));
+
+        Controller::change_state(&mut *pedestrian_traffic_lights, State::Yellow);
+        println!("{:#?} pedestrian lights transitioned to yellow state.", direction);
+        thread::sleep(time::Duration::from_secs(self.pedestrian_yellow_time));
+
+        Controller::change_state(&mut *pedestrian_traffic_lights, State::Red);
+        println!("{:#?} pedestrian lights transitioned to red state.", direction);
+        thread::sleep(time::Duration::from_secs(self.car_green_time - self.pedestrian_yellow_time - pgt));
+
+        Controller::change_state(&mut *car_traffic_lights, State::Yellow);
+        println!("{:#?} car traffic lights transitioned to yellow state.", direction);
+        thread::sleep(time::Duration::from_secs(self.car_yellow_time));
+
+        Controller::change_state(&mut *car_traffic_lights, State::Red);
+        println!("{:#?} car traffic lights transitioned to red state.", direction);
+    }
+
+    fn change_state(traffic_lights: &mut Vec<TrafficLight>, state: State) {
+        match state {
+            State::Green => for tl in traffic_lights { tl.green() },
+            State::Yellow => for tl in traffic_lights { tl.yellow() },
+            State::Red => for tl in traffic_lights { tl.red() }, 
+        }
+    }
+
     pub fn start(&mut self) {
         loop {
-            for tl in &mut self.horizontal_pedestrian_traffic_lights {
-                tl.green();
-            }
-            println!("Horizontal pedestrian lights transitioned to green state.");
-            thread::sleep(time::Duration::from_secs(self.car_red_to_green_transition_time));
+            self.control(
+                Direction::Horizontal
+            );
 
-            for tl in &mut self.horizontal_car_traffic_lights {
-                tl.green();
-            }
-            println!("Horizontal car traffic lights transitioned to green state.");
-
-            let pgt = self.pedestrian_green_time - self.car_red_to_green_transition_time;
-            thread::sleep(time::Duration::from_secs(pgt));
-
-            for tl in &mut self.horizontal_pedestrian_traffic_lights {
-                tl.yellow();
-            }
-            println!("Horizontal pedestrian lights transitioned to yellow state.");
-            thread::sleep(time::Duration::from_secs(self.pedestrian_yellow_time));
-
-            for tl in &mut self.horizontal_pedestrian_traffic_lights {
-                tl.red();
-            }
-            println!("Horizontal pedestrian lights transitioned to red state.");
-            thread::sleep(time::Duration::from_secs(self.car_green_time - self.pedestrian_yellow_time - pgt));
-
-            for tl in &mut self.horizontal_car_traffic_lights {
-                tl.yellow();
-            }
-            println!("Horizontal car traffic lights transitioned to yellow state.");
-            thread::sleep(time::Duration::from_secs(self.car_yellow_time));
-
-            for tl in &mut self.horizontal_car_traffic_lights {
-                tl.red();
-            }
-            println!("Horizontal car traffic lights transitioned to red state.");
-            
-            for tl in &mut self.vertical_pedestrian_traffic_lights {
-                tl.green();
-            }
-            println!("Vertical pedestrian lights transitioned to green state.");
-            thread::sleep(time::Duration::from_secs(self.car_red_to_green_transition_time));
-
-            for tl in &mut self.vertical_car_traffic_lights {
-                tl.green();
-            }
-            println!("Vertical car traffic lights transitioned to green state.");
-
-            let pgt = self.pedestrian_green_time - self.car_red_to_green_transition_time;
-            thread::sleep(time::Duration::from_secs(pgt));
-
-            for tl in &mut self.vertical_pedestrian_traffic_lights {
-                tl.yellow();
-            }
-            println!("Vertical pedestrian lights transitioned to yellow state.");
-            thread::sleep(time::Duration::from_secs(self.pedestrian_yellow_time));
-
-            for tl in &mut self.vertical_pedestrian_traffic_lights {
-                tl.red();
-            }
-            println!("Vertical pedestrian lights transitioned to red state.");
-            thread::sleep(time::Duration::from_secs(self.car_green_time - self.pedestrian_yellow_time - pgt));
-
-            for tl in &mut self.vertical_car_traffic_lights {
-                tl.yellow();
-            }
-            println!("Vertical car traffic lights transitioned to yellow state.");
-            thread::sleep(time::Duration::from_secs(self.car_yellow_time));
-
-            for tl in &mut self.vertical_car_traffic_lights {
-                tl.red();
-            }
-            println!("Vertical car traffic lights transitioned to red state.");
+            self.control(
+                Direction::Vertical 
+            );
         }
     }
 }

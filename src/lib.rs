@@ -90,13 +90,8 @@ impl Controller {
 
     pub fn start(&mut self) {
         loop {
-            self.control(
-                Direction::Horizontal
-            );
-
-            self.control(
-                Direction::Vertical 
-            );
+            self.control(Direction::Horizontal);
+            self.control(Direction::Vertical);
         }
     }
 }

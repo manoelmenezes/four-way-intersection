@@ -1,5 +1,7 @@
 # Four Way Intersection
 
+![Four Way Intersection](https://github.com/manoelmenezes/four-way-intersection/blob/main/doc/images/four-way-intersection.png?raw=true)
+
 * There are 4 traffic lights, each with green, yellow and red lights.
    * traffic light for left to right direction.
    * traffic light for right to light direction.

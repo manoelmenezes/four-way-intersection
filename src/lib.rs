@@ -54,29 +54,29 @@ impl Controller {
                                    ),
         };
 
-        Controller::change_state(&mut *pedestrian_traffic_lights, State::Green);
+        Controller::change_state(pedestrian_traffic_lights, State::Green);
         println!("{:#?} pedestrian lights transitioned to green state.", direction);
         thread::sleep(time::Duration::from_secs(self.car_red_to_green_transition_time));
 
-        Controller::change_state(&mut *car_traffic_lights, State::Green);
+        Controller::change_state(car_traffic_lights, State::Green);
         println!("{:#?} car traffic lights transitioned to green state.", direction);
 
         let pgt = self.pedestrian_green_time - self.car_red_to_green_transition_time;
         thread::sleep(time::Duration::from_secs(pgt));
 
-        Controller::change_state(&mut *pedestrian_traffic_lights, State::Yellow);
+        Controller::change_state(pedestrian_traffic_lights, State::Yellow);
         println!("{:#?} pedestrian lights transitioned to yellow state.", direction);
         thread::sleep(time::Duration::from_secs(self.pedestrian_yellow_time));
 
-        Controller::change_state(&mut *pedestrian_traffic_lights, State::Red);
+        Controller::change_state(pedestrian_traffic_lights, State::Red);
         println!("{:#?} pedestrian lights transitioned to red state.", direction);
         thread::sleep(time::Duration::from_secs(self.car_green_time - self.pedestrian_yellow_time - pgt));
 
-        Controller::change_state(&mut *car_traffic_lights, State::Yellow);
+        Controller::change_state(car_traffic_lights, State::Yellow);
         println!("{:#?} car traffic lights transitioned to yellow state.", direction);
         thread::sleep(time::Duration::from_secs(self.car_yellow_time));
 
-        Controller::change_state(&mut *car_traffic_lights, State::Red);
+        Controller::change_state(car_traffic_lights, State::Red);
         println!("{:#?} car traffic lights transitioned to red state.", direction);
     }
 

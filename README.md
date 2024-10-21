@@ -1,10 +1,10 @@
 # Four Way Intersection
 
 * There are 4 traffic lights, each with green, yellow and red lights.
- * traffic light for left to right direction.
- * traffic light for right to light direction.
- * traffic light for up to down direction.
- * traffic light for down to up direction.
+   * traffic light for left to right direction.
+   * traffic light for right to light direction.
+   * traffic light for up to down direction.
+   * traffic light for down to up direction.
 
 * Initially, each traffic light will have default values for the time it needs to stay in each state (green, yellow, red).
 

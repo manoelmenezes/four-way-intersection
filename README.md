@@ -1,5 +1,7 @@
 # Four Way Intersection
 
+## Requirements
+
 ![Four Way Intersection](https://github.com/manoelmenezes/four-way-intersection/blob/main/doc/images/four-way-intersection.png?raw=true)
 
 * There are 4 traffic lights, each with green, yellow and red lights.
@@ -30,4 +32,18 @@
       * After the Green time is over, the controller will set the state to Yellow.
       * After the Yellow time is over, the controller will set the state to Red.
       * As said before, there is a transition time for the traffic lights in the other direction to transition to Green state. On the other hand, as soon as the traffic light in one direction (vertical or horizontal) transitions to Red state, the 4 pedestrian lights that allow crossing this direction will transition to Green state.
+
+## Solutions
+
+### Solution 1
+
+* The controller and the traffic lights are running on the same thread just to demonstrate the idea.
+
+### Solution 2
+
+* The controller and the traffic lights are running on their own thread and there is a communication via channel from the controller thread to each traffic light thread. There is a channel for each traffic light so that the controller can communicate with them.
+
+### Solution 3
+
+* The controller and the traffic lights are different processes running on different machines communicating via gRPC (HTTP 2 over the local network).
 

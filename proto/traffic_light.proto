@@ -1,0 +1,25 @@
+syntax = "proto3";
+package traffic_light;
+
+service TrafficLightService {
+    rpc GetState(GetStateRequest) returns (GetStateResponse);
+    rpc setState(SetStateRequest) returns (SetStateResponse);
+}
+
+enum State {
+    GREEN = 0;
+    YELLOW = 1;
+    RED = 2;
+}
+
+message GetStateRequest {}
+
+message GetStateResponse {
+    State state = 0;
+}
+
+message SetStateRequest {
+    State state = 0;
+}
+
+message SetStateResponse {}
